@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+Pillow
+sqlalchemy
+sqlalchemy-utils
+psycopg2-binary
+pytest
+python-dotenv
