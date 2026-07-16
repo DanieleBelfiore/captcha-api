@@ -7,3 +7,4 @@ sqlalchemy-utils
 psycopg2-binary
 pytest
 python-dotenv
+httpx2

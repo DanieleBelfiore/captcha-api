@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
-from pytest import Session
+from sqlalchemy.orm import Session
 from app.database import get_db
+from app.rate_limit import rate_limiter
 from app.schemas import CaptchaResponse, CaptchaValidation
 from app.captcha import generate_captcha, validate_captcha_text
 
-router = APIRouter(prefix="/captcha", tags=["Captcha"])
+router = APIRouter(prefix="/captcha", tags=["Captcha"], dependencies=[Depends(rate_limiter)])
 
 
 @router.get(

@@ -1,10 +1,13 @@
 import random
 import string
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import base64
-from pytest import Session
+from sqlalchemy.orm import Session
 from app.models import Captcha
+
+CAPTCHA_TTL = timedelta(minutes=5)
 
 
 def generate_random_text(length: int = 6) -> str:
@@ -42,4 +45,21 @@ def get_captcha_text(db: Session, id: int) -> str:
 
 
 def validate_captcha_text(db: Session, id: int, text: str) -> bool:
-    return get_captcha_text(db, id) == text
+    captcha = db.query(Captcha).filter(Captcha.id == id).first()
+    if captcha is None:
+        return False
+
+    created_at = captcha.created_at
+    if created_at.tzinfo is None:
+        created_at = created_at.replace(tzinfo=timezone.utc)
+    if datetime.now(timezone.utc) - created_at > CAPTCHA_TTL:
+        db.delete(captcha)
+        db.commit()
+        return False
+
+    if captcha.text != text:
+        return False
+
+    db.delete(captcha)
+    db.commit()
+    return True
