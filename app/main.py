@@ -5,7 +5,7 @@ from app.routes import router
 
 app = FastAPI(
     title="Captcha API",
-    summary="API to manage the captchas.",
+    summary="API to generate and validate captchas.",
     version="1.0.0",
     docs_url="/swagger",
 )
