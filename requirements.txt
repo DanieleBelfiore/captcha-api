@@ -4,7 +4,7 @@ pydantic
 Pillow
 sqlalchemy
 sqlalchemy-utils
-psycopg2-binary
+psycopg[binary]
 pytest
 python-dotenv
 httpx2
